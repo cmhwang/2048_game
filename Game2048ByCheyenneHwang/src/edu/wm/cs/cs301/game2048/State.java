@@ -226,7 +226,7 @@ public class State implements GameState {
 		// TODO fix only one slide
 		int pointCounter = 0;
 		for (int r = 0; r < 4; r++){
-			for (int c = 3; c > 0; c--) {
+			for (int c = 1; c < 4; c++) {
 				int curVal = getValue(c, r);
 				int compVal = getValue(c-1, r);
 				if (curVal == compVal) {
@@ -235,8 +235,8 @@ public class State implements GameState {
 					setValue(c, r, 0);
 					setValue(c-1, r, newVal);
 					pointCounter = pointCounter + newVal;
-					if (c > 1) {
-						c--;
+					if (c < 2) {
+						c++;
 					}
 				} else {
 					if (compVal == 0) {
@@ -246,6 +246,9 @@ public class State implements GameState {
 				}
 			}
 		}
+		if (canMerge()) {
+			addTile();
+		}//TODO - need to add an else? if board full does game auto end
 		
 		return pointCounter;
 	}
@@ -254,8 +257,8 @@ public class State implements GameState {
 	public int right() {
 		// TODO fix only one slide
 		int pointCounter = 0;
-		for (int r = 0; r <4; r++){
-			for (int c = 0; c < 3; c++) {
+		for (int r = 0; r < 4; r++){
+			for (int c = 2; c >= 0; c--) {
 				int curVal = getValue(c, r);
 				int compVal = getValue(c+1, r);
 				if (curVal == compVal) {
@@ -264,8 +267,8 @@ public class State implements GameState {
 					setValue(c, r, 0);
 					setValue(c+1, r, newVal);
 					pointCounter = pointCounter + newVal;
-					if (c < 2) {
-						c++;
+					if (c > 1) {
+						c--;
 					}
 				} else {
 					if (compVal == 0) {
@@ -275,6 +278,9 @@ public class State implements GameState {
 				}
 			}
 		}
+		if (canMerge()) {
+			addTile();
+		}//TODO - need to add an else? if board full does game auto end
 		
 		return pointCounter;
 	}
@@ -284,7 +290,7 @@ public class State implements GameState {
 		// TODO fix only one slide
 		int pointCounter = 0;
 		for (int c = 0; c <= 3; c++) {
-			for (int r = 0; r < 3; r++) {
+			for (int r = 2; r >= 0; r--) {
 				int curVal = getValue(c, r);
 				int compVal = getValue(c, r+1);;
 				if (curVal == compVal) {
@@ -293,8 +299,8 @@ public class State implements GameState {
 					setValue(c, r, 0);
 					setValue(c, r+1, newVal);
 					pointCounter = pointCounter + newVal;
-					if (r < 2) {
-						r++;
+					if (r > 1) {
+						r--;
 					}
 				} else {
 					if (compVal == 0) {
@@ -304,16 +310,19 @@ public class State implements GameState {
 				}
 			}
 		}
+		if (canMerge()) {
+			addTile();
+		}//TODO - need to add an else? if board full does game auto end
 		
 		return pointCounter;
 	}
 
 	@Override
 	public int up() {
-		// TODO fix only one slide, use get + set value
+		// TODO fix only one slide
 		int pointCounter = 0;
 		for (int c = 0; c <= 3; c++) {
-			for (int r = 3; r > 0; r--) {
+			for (int r = 1; r < 4; r++) {
 				int curVal = getValue(c, r);
 				int compVal = getValue(c, r-1);
 				if (curVal == compVal) {
@@ -322,8 +331,8 @@ public class State implements GameState {
 					setValue(c, r, 0);
 					setValue(c, r-1, newVal);
 					pointCounter = pointCounter + newVal;
-					if (r > 1) {
-						r--;
+					if (r < 2) {
+						r++;
 					}
 				} else {
 					if (compVal == 0) {
@@ -333,6 +342,9 @@ public class State implements GameState {
 				}
 			}
 		}
+		if (canMerge()) {
+			addTile();
+		}//TODO - need to add an else? if board full does game auto end
 		
 		return pointCounter;
 	}
