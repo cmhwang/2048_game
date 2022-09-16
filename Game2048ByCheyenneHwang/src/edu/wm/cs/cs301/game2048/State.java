@@ -234,25 +234,105 @@ public class State implements GameState {
 	@Override
 	public int left() {
 		// TODO Auto-generated method stub
-		return 0;
+		int pointCounter = 0;
+		for (int r = 0; r <4; r++){
+			for (int c = 3; c > 0; c--) {
+				int curVal = board[r][c];
+				if (board[r][c] == board[r][c-1]) {
+					int newVal = curVal * 2;
+					
+					board[r][c] = 0;//CONSIDER use setValue instead 
+					board[r][c-1] = newVal;
+					pointCounter = pointCounter + newVal;
+					c--;
+				} else {
+					if (board[r][c-1] == 0) {
+						board[r][c-1] = curVal;
+						board[r][c] = 0;
+					}
+				}
+			}
+		}
+		
+		return pointCounter;
 	}
 
 	@Override
 	public int right() {
 		// TODO Auto-generated method stub
-		return 0;
+		int pointCounter = 0;
+		for (int r = 0; r <4; r++){
+			for (int c = 0; c < 3; c++) {
+				int curVal = board[r][c];
+				if (board[r][c] == board[r][c+1]) {
+					int newVal = curVal * 2;
+					
+					board[r][c] = 0;//CONSIDER use setValue instead 
+					board[r][c+1] = newVal;
+					pointCounter = pointCounter + newVal;
+					c++;
+				} else {
+					if (board[r][c+1] == 0) {
+						board[r][c+1] = curVal;
+						board[r][c] = 0;
+					}
+				}
+			}
+		}
+		
+		return pointCounter;
 	}
 
 	@Override
 	public int down() {
 		// TODO Auto-generated method stub
-		return 0;
+		int pointCounter = 0;
+		for (int r = 0; r < 3; r++){
+			for (int c = 0; c <= 3; c++) {
+				int curVal = board[r][c];
+				if (board[r][c] == board[r+1][c]) {
+					int newVal = curVal * 2;
+					
+					board[r][c] = 0;//CONSIDER use setValue instead 
+					board[r+1][c] = newVal;
+					pointCounter = pointCounter + newVal;
+					r++;
+				} else {
+					if (board[r+1][c] == 0) {
+						board[r+1][c] = curVal;
+						board[r][c] = 0;
+					}
+				}
+			}
+		}
+		
+		return pointCounter;
 	}
 
 	@Override
 	public int up() {
 		// TODO Auto-generated method stub
-		return 0;
+		int pointCounter = 0;
+		for (int r = 3; r > 0; r--){
+			for (int c = 0; c <= 3; c++) {
+				int curVal = board[r][c];
+				if (board[r][c] == board[r-1][c]) {
+					int newVal = curVal * 2;
+					
+					board[r][c] = 0;//CONSIDER use setValue instead 
+					board[r-1][c] = newVal;
+					pointCounter = pointCounter + newVal;
+					r--;
+				} else {
+					if (board[r-1][c] == 0) {
+						board[r-1][c] = curVal;
+						board[r][c] = 0;
+					}
+				}
+			}
+		}
+		
+		return pointCounter;
 	}
 
 }
