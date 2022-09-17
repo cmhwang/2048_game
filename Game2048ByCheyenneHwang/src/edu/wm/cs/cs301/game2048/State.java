@@ -90,7 +90,6 @@ public class State implements GameState {
 		if (counter < 1) {
 			return false;
 		}else {
-			int min = 0;
 			int max1 = counter - 1;
 			
 			int randomTileVal = (int)Math.floor(Math.random()*(max1+1));
@@ -246,9 +245,9 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (canMerge()) {
+		if (!isFull()) {
 			addTile();
-		}//TODO - need to add an else? if board full does game auto end
+		}
 		
 		return pointCounter;
 	}
@@ -278,9 +277,9 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (canMerge()) {
+		if (!isFull()) {
 			addTile();
-		}//TODO - need to add an else? if board full does game auto end
+		}
 		
 		return pointCounter;
 	}
@@ -310,9 +309,9 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (canMerge()) {
+		if (!isFull()) {
 			addTile();
-		}//TODO - need to add an else? if board full does game auto end
+		}
 		
 		return pointCounter;
 	}
@@ -342,9 +341,9 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (canMerge()) {
+		if (!isFull()) {
 			addTile();
-		}//TODO - need to add an else? if board full does game auto end
+		}
 		
 		return pointCounter;
 	}
