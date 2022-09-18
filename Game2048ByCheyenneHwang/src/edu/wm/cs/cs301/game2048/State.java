@@ -1,49 +1,18 @@
 package edu.wm.cs.cs301.game2048;
 
+import java.util.Arrays;
+
 public class State implements GameState {
 	
-	private int[][] board;
-	int myInt;
-	double myDouble;
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result;
-		//TODO need to fill this in from lecture
-		return result;
-	}
-	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (!(obj instanceof Object)) {//TODO should check that Object is valid (Example in the ex from lecture)
-			return false;
-		}
-		Object other = (Object) obj;
-//		if (Double.doubleToLongBits(myDouble) != Double.doubleToLongBits(other.myDouble)){TODO need to implement this part - see lecture
-//			return false;
-//		}
-		return true;
-	}
+	private int[][] board = new int[4][4];//CONSIDER making this private
 	
 	public State(GameState original) {
-		// TODO 
-		board = new int[4][4];
-		setEmptyBoard();
+		// TODO consider updating this so that copy is returned instead	
 	}
 
 	
 	public State() {
 		// TODO 
-		board = new int[4][4];
-		setEmptyBoard();
 	}
 
 
@@ -110,14 +79,18 @@ public class State implements GameState {
 	@Override
 	public boolean isFull() {
 		// TODO 
+		int counter = 0;
 		for (int i=0; i<4; i++) {
 			for (int j=0; j<4; j++) {
 				if (getValue(i, j) != 0) {
-					return false;
+					counter++;
 				}
 			}
 		}
-		return true;
+		if (counter == 16) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -281,9 +254,6 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (!isFull()) {//CONSIDER - instead of adding it update the game so that ends if game over (2048 or board full with no merge), game not over (add tile by changing game state), or not change game state if board full but canMerge()
-			addTile();
-		}
 		
 		
 		return pointCounter;
@@ -314,9 +284,7 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (!isFull()) {
-			addTile();
-		}
+
 		
 		return pointCounter;
 	}
@@ -345,9 +313,6 @@ public class State implements GameState {
 					}
 				}
 			}
-		}
-		if (!isFull()) {
-			addTile();
 		}
 		
 		return pointCounter;
@@ -378,11 +343,34 @@ public class State implements GameState {
 				}
 			}
 		}
-		if (!isFull()) {
-			addTile();
-		}
+		
+		
 		
 		return pointCounter;
 	}
+
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.deepHashCode(board);
+		return result;
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		State other = (State) obj;
+		return Arrays.deepEquals(board, other.board);
+	}
+	
+	
 
 }
