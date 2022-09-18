@@ -125,7 +125,7 @@ public class Game2048 extends JPanel {
 	 * @return a newly instantiated object that implements GameState
 	 */
 	protected static GameState createState(GameState original) {
-		return (original == null) ? new State(original) : new State(original);
+		return (original == null) ? new State() : new State(original);
 	}
 
 	/**
