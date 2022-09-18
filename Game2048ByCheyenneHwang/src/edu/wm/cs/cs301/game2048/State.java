@@ -8,11 +8,17 @@ public class State implements GameState {
 	
 	public State(GameState original) {
 		// TODO consider updating this so that copy is returned instead	
+//		for(int i = 0; i<4; i++) {
+//			for(int j=0; j<4; j++) {
+//				board[i][j] = original.getValue(j,  i);
+//			}
+//		}
 	}
 
 	
 	public State() {
 		// TODO 
+//		setEmptyBoard();
 	}
 
 
@@ -195,97 +201,94 @@ public class State implements GameState {
 
 	@Override
 	public int left() {
-		// TODO MERGE NOT WORKING STILL!! not merging beyond full slide even though point coutner updating, also need to get rid of add tile - connected to game state
+		// TODO 
 		int pointCounter = 0;
-//		for (int r = 0; r < 4; r++){
-//			for (int c = 1; c < 4; c++) {
-//				int curVal = getValue(c, r);
-//				int compVal = getValue(c-1, r);
-//				if (curVal == compVal) {
-//					int newVal = curVal * 2;
-//					
-//					setValue(c, r, 0);
-//					setValue(c-1, r, newVal);
-//					pointCounter = pointCounter + newVal;
-//					if (c < 2) {
-//						c++;
-//					}
-//				} else {
-//					if (compVal == 0) {
-//						setValue(c-1, r, curVal);
-//						setValue(c, r, 0);
-//					}
-//				}
-//			}
-//		}
-		
-		for (int r = 0; r < 4; r++) {//scenario: run through each row
-			int[] mergedColVal = new int[4];
-			for (int c = 1; c < 4; c++) {//scenario: checking each space in the row, starting with the left
-				int curVal = getValue(c, r);
-				if (curVal != 0) {//scenario: found the left most tile that needs to be slid
-					boolean fullSlide = true;
-					for (int i = c-1; i >= 0; i--) {//scenario: checking all the spaces to the left of examined tile
-						int compVal = getValue(i, r);
-						if (compVal != 0) {//scenario: found the left most space the tile can move into
-							fullSlide = false;
-							int newVal = curVal * 2;
-							
-							if ((mergedColVal[i] == 0) && (compVal == curVal) && ((i+1) == c)) {//scenario: left most space it can occupy is the result of a merge only			
-								setValue(i, r, newVal);
-								setValue(c, r, 0);
-								pointCounter = pointCounter + newVal;
-								mergedColVal[i] = 1;
-							}else if ((mergedColVal[i] == 0) && (compVal == curVal) && ((i+1) != c)){//scenario: left most space it can occupy is result of a slide + merge
-								setValue(i, r, newVal);
-								setValue(c, r, 0);
-								pointCounter = pointCounter + newVal;
-								mergedColVal[i] = 1;
-							}else if (((i+1) != c) && ((mergedColVal[i] == 1) || (compVal != curVal))) {//scenario: left most space it can occupy is the result of a slide only (position change but no merge)
-								setValue(i+1, r, curVal);
-								setValue(c, r, 0);
-							}
+		for (int r = 0; r < 4; r++) {
+			for (int c = 1; c < 4; c++) {//scenario: initial move
+				if (board[r][c] > 0) {
+					int toMove = c;
+					for (int t = c-1; t >= 0; t--) {
+						if (board[r][t] == 0) {
+							toMove = t;
 						}
-					if (fullSlide) {//scenario: the left most tile goes all the way to the left with no interruption
-						setValue(0, r, curVal);
-						setValue(c, r, 0);
 					}
-					}			
+					if (toMove != c) {//scenario: action of the sliding down
+						int tempVal = (int) board[r][c];
+						board[r][toMove] = tempVal;
+						board[r][c] = 0;
+					}
+				}				
+			}
+			for (int m = 1; m < 4; m++) {//scenario: merge tiles
+				if ((board[r][m-1] == board[r][m]) && (board[r][m] > 0)) {
+					board[r][m-1] = board[r][m-1]*2;
+					board[r][m] = 0;
+					pointCounter = pointCounter + board[r][m-1];
 				}
 			}
+			for (int e = 1; e < 4; e++) {
+				if (board[r][e] > 0) {
+					int toMove = e;
+					for (int t = e-1; t >= 0; t--) {
+						if (board[r][t] == 0) {
+							toMove = t;
+						}
+					}
+					if (toMove != e) {
+						int tempVal = (int) board[r][e];
+						board[r][toMove] = tempVal;
+						board[r][e] = 0;
+					}
+				}			
+			}
 		}
-		
-		
 		return pointCounter;
 	}
 
 	@Override
 	public int right() {
-		// TODO fix only one slide, get rid of add tile - connected to updating game state
+		// TODO 
+		
 		int pointCounter = 0;
-		for (int r = 0; r < 4; r++){
-			for (int c = 2; c >= 0; c--) {
-				int curVal = getValue(c, r);
-				int compVal = getValue(c+1, r);
-				if (curVal == compVal) {
-					int newVal = curVal * 2;
-					
-					setValue(c, r, 0);
-					setValue(c+1, r, newVal);
-					pointCounter = pointCounter + newVal;
-					if (c > 1) {
-						c--;
+		for (int r = 0; r < 4; r++) {
+			for (int c = 2; c >= 0; c--) {//scenario: initial move
+				if (board[r][c] > 0) {
+					int toMove = c;
+					for (int t = c+1; t < 4; t++) {
+						if (board[r][t] == 0) {
+							toMove = t;
+						}
 					}
-				} else {
-					if (compVal == 0) {
-						setValue(c+1, r, curVal);
-						setValue(c, r, 0);
+					if (toMove != c) {//scenario: action of the sliding down
+						int tempVal = (int) board[r][c];
+						board[r][toMove] = tempVal;
+						board[r][c] = 0;
 					}
+				}				
+			}
+			for (int m = 2; m >= 0; m--) {//scenario: merge tiles
+				if ((board[r][m+1] == board[r][m]) && (board[r][m] > 0)) {
+					board[r][m+1] = board[r][m+1]*2;
+					board[r][m] = 0;
+					pointCounter = pointCounter + board[r][m+1];
 				}
 			}
+			for (int e = 2; e >= 0; e--) {
+				if (board[r][e] > 0) {
+					int toMove = e;
+					for (int t = e+1; t < 4; t++) {
+						if (board[r][t] == 0) {
+							toMove = t;
+						}
+					}
+					if (toMove != e) {
+						int tempVal = (int) board[r][e];
+						board[r][toMove] = tempVal;
+						board[r][e] = 0;
+					}
+				}			
+			}
 		}
-
-		
 		return pointCounter;
 	}
 
@@ -293,59 +296,93 @@ public class State implements GameState {
 	public int down() {
 		// TODO fix only one slide, get rid of add tile - connected to updating game state
 		int pointCounter = 0;
-		for (int c = 0; c <= 3; c++) {
-			for (int r = 2; r >= 0; r--) {
-				int curVal = getValue(c, r);
-				int compVal = getValue(c, r+1);;
-				if (curVal == compVal) {
-					int newVal = curVal * 2;
-					
-					setValue(c, r, 0);
-					setValue(c, r+1, newVal);
-					pointCounter = pointCounter + newVal;
-					if (r > 1) {
-						r--;
+		for (int c = 0; c < 4; c++) {
+			for (int r = 2; r >= 0; r--) {//scenario: initial move
+				if (board[r][c] > 0) {
+					int toMove = r;
+					for (int t = r+1; t < 4; t++) {
+						if (board[t][c] == 0) {
+							toMove = t;
+						}
 					}
-				} else {
-					if (compVal == 0) {
-						setValue(c, r+1, curVal);
-						setValue(c, r, 0);
+					if (toMove != r) {//scenario: action of the sliding down
+						int tempVal = (int) board[r][c];
+						board[toMove][c] = tempVal;
+						board[r][c] = 0;
 					}
+				}				
+			}
+			for (int m = 2; m >= 0; m--) {//scenario: merge tiles
+				if ((board[m+1][c] == board[m][c]) && (board[m][c] > 0)) {
+					board[m+1][c] = board[m+1][c]*2;
+					board[m][c] = 0;
+					pointCounter = pointCounter + board[m+1][c];
 				}
 			}
+			for (int e = 2; e >= 0; e--) {
+				if (board[e][c] > 0) {
+					int toMove = e;
+					for (int t = e+1; t < 4; t++) {
+						if (board[t][c] == 0) {
+							toMove = t;
+						}
+					}
+					if (toMove != e) {
+						int tempVal = (int) board[e][c];
+						board[toMove][c] = tempVal;
+						board[e][c] = 0;
+					}
+				}			
+			}
 		}
-		
 		return pointCounter;
+		
 	}
 
 	@Override
 	public int up() {
 		// TODO fix only one slide, get rid of add tile - connected to updating game state
+		
 		int pointCounter = 0;
-		for (int c = 0; c <= 3; c++) {
-			for (int r = 1; r < 4; r++) {
-				int curVal = getValue(c, r);
-				int compVal = getValue(c, r-1);
-				if (curVal == compVal) {
-					int newVal = curVal * 2;
-					
-					setValue(c, r, 0);
-					setValue(c, r-1, newVal);
-					pointCounter = pointCounter + newVal;
-					if (r < 2) {
-						r++;
+		for (int c = 0; c < 4; c++) {
+			for (int r = 1; r < 4; r++) {//scenario: initial move
+				if (board[r][c] > 0) {
+					int toMove = r;
+					for (int t = r-1; t >= 0; t--) {
+						if (board[t][c] == 0) {
+							toMove = t;
+						}
 					}
-				} else {
-					if (compVal == 0) {
-						setValue(c, r-1, curVal);
-						setValue(c, r, 0);
+					if (toMove != r) {//scenario: action of the sliding down
+						int tempVal = (int) board[r][c];
+						board[toMove][c] = tempVal;
+						board[r][c] = 0;
 					}
+				}				
+			}
+			for (int m = 1; m < 4; m++) {//scenario: merge tiles
+				if ((board[m-1][c] == board[m][c]) && (board[m][c] > 0)) {
+					board[m-1][c] = board[m-1][c]*2;
+					board[m][c] = 0;
+					pointCounter = pointCounter + board[m-1][c];
 				}
 			}
+			for (int e = 1; e < 4; e++) {
+				if (board[e][c] > 0) {
+					int toMove = e;
+					for (int t = e-1; t >= 0; t--) {
+						if (board[t][c] == 0) {
+							toMove = t;
+						}
+					}
+					if (toMove != e) {
+						int tempVal = (int) board[e][c];
+						board[toMove][c] = tempVal;
+						board[e][c] = 0;
+					}
+				}			
+			}
 		}
-		
-		
-		
 		return pointCounter;
 	}
 
