@@ -9,7 +9,7 @@ public class State implements GameState {
 	public State(GameState original) {
 		// TODO consider updating this so that copy is returned instead	
 		for(int i = 0; i<4; i++) {
-			for(int j=0; j<4; j++) {
+			for(int j=0; j<4; j++) { 
 				board[i][j] = original.getValue(j, i);
 			}
 		}
